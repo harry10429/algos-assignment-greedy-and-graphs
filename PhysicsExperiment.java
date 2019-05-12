@@ -1,7 +1,8 @@
 /**
  * Physics Experiment
- * Author: Your Name and Carolyn Yao
- * Does this compile or finish running within 5 seconds? Y/N
+
+ * Author: Chenhao Li and Carolyn Yao
+ * Does this compile or finish running within 5 seconds? Yes
  */
 
 /**
@@ -36,8 +37,60 @@ public class PhysicsExperiment {
     // Your scheduleTable is initialized as all 0's so far. Your code will put 1's
     // in the table in the right places based on the return description
     int[][] scheduleTable = new int[numStudents + 1][numSteps + 1];
+    
+    int [] stepsNeed = new int[numSteps+1];
+    int [] studentAva = new int[numStudents+1];
+    int count = 0;
+    int [] tempSet = new int[numStudents+1];
+    
+    //To Sum up the total steps that a student can make
+    for (int student = 1; student <= numStudents; student++) {
+    	int num = 0;
+    	int[] Steps = signUpTable[student];
+        for(int i = 0; i< Steps.length; i++) {
+        	if (Steps[i] == 1)
+        	num++;
+       tempSet[student] = num;
+        }
+    }
+        
+    //To make sure whether steps are already assigned by student or not
+    for(int i = 1; i <= numSteps ; i++) {
+    	stepsNeed [i] = 1;
+    }
+    //student status to be used in while loop
+    for (int j = 1; j <= numStudents; j++) {
+    	studentAva [j] = 1;
+    }
 
-    // Your code goes here
+
+    while (count <= numStudents){
+        int StudentdoneMost = 0;
+        int OptimalSol = 0;
+        for(int a = 1; a <= numStudents; a++) 
+        	//greedy algorithm, find Optimal solution
+        	//if the student haven't done the work and he or she does most steps, set studentdonemost 
+        	// to that student
+            if( (tempSet[a] > OptimalSol) && (studentAva[a] ==1)) {
+         	  StudentdoneMost = a;
+         	  OptimalSol = tempSet[a];
+    }
+        
+        studentAva[StudentdoneMost] = 0;
+        
+        //replace steps by that student in stepNeed array
+        //also record these steps in schduleTable
+        
+    	int[] Steps = signUpTable[StudentdoneMost];
+        for(int i = 0; i< Steps.length; i++) {
+         if ((Steps[i] == 1) && (stepsNeed[i]== 1)) {
+        	scheduleTable[StudentdoneMost][i] = 1;
+            stepsNeed[i] = 0;
+         }
+         else scheduleTable[StudentdoneMost][i] = 0;
+        }
+       count++;
+    }
 
     return scheduleTable;
   }
